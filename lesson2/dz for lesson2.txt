@@ -1,0 +1,83 @@
+1.
+
+[client]
+user=root
+password=my95sql
+
+2.
+
+mysql> CREATE DATABASE example;
+Query OK, 1 row affected (0.01 sec)
+
+mysql> SHOW DATABASES;
++--------------------+
+| Database           |
++--------------------+
+| example            |
+| information_schema |
+| mysql              |
+| performance_schema |
+| sys                |
++--------------------+
+5 rows in set (0.00 sec)
+
+mysql> USE example;
+Database changed
+mysql> CREATE TABLE users (id SERIAL, name VARCHAR(225) NOT NULL);
+Query OK, 0 rows affected (0.02 sec)
+mysql> SHOW FULL COLUMNS FROM users;
++-------+-----------------+--------------------+------+-----+---------+----------------+---------------------------------+---------+
+| Field | Type            | Collation          | Null | Key | Default | Extra          | Privileges                      | Comment |
++-------+-----------------+--------------------+------+-----+---------+----------------+---------------------------------+---------+
+| id    | bigint unsigned | NULL               | NO   | PRI | NULL    | auto_increment | select,insert,update,references |         |
+| name  | varchar(225)    | utf8mb4_0900_ai_ci | NO   |     | NULL    |                | select,insert,update,references |         |
++-------+-----------------+--------------------+------+-----+---------+----------------+---------------------------------+---------+
+2 rows in set (0.00 sec)
+
+
+3.
+
+ubuntu@ubuntu-VirtualBox:~$ mysqldump example > example.sql
+mysql> CREATE DATABASE IF NOT EXISTS sample;
+Query OK, 1 row affected (0.01 sec)
+
+mysql> SHOW DATABASES;
++--------------------+
+| Database           |
++--------------------+
+| example            |
+| information_schema |
+| mysql              |
+| performance_schema |
+| sample             |
+| sys                |
++--------------------+
+6 rows in set (0.00 sec)
+
+ubuntu@ubuntu-VirtualBox:~$ mysql sample < example.sql
+ubuntu@ubuntu-VirtualBox:~$ mysql
+
+mysql> USE sample;
+Reading table information for completion of table and column names
+You can turn off this feature to get a quicker startup with -A
+
+Database changed
+mysql> EXPLAIN users;
++-------+-----------------+------+-----+---------+----------------+
+| Field | Type            | Null | Key | Default | Extra          |
++-------+-----------------+------+-----+---------+----------------+
+| id    | bigint unsigned | NO   | PRI | NULL    | auto_increment |
+| name  | varchar(225)    | NO   |     | NULL    |                |
++-------+-----------------+------+-----+---------+----------------+
+2 rows in set (0.00 sec)
+
+
+4.
+
+ubuntu@ubuntu-VirtualBox:~$ mysqldump mysql help_keyword --where="TRUE ORDER BY help_keyword_id LIMIT 100"
+...
+LOCK TABLES `help_keyword` WRITE;
+/*!40000 ALTER TABLE `help_keyword` DISABLE KEYS */;
+INSERT INTO `help_keyword` VALUES (0,'HELP_DATE'),(1,'HELP_VERSION'),(2,'DEFAULT'),
+(3,'SERIAL'),(4,'VALUE'),(5,'HELP'),(6,'ASYMMETRIC_DECRYPT')
+...
